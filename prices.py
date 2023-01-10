@@ -18,6 +18,12 @@ def get_prices(idx):
     df['Last sale time'] = pd.to_datetime(df['Last sale time'], unit='s')
     return df
 
+def get_price(idx):
+    df = get_prices(idx)
+    base = int(df['Base Price'].values[0])
+    last = int(df['Last sale price'].values[0])
+    return int((base + last) / 2)
+
 
 def get_bidding_info(idx, subkey):
     url = "https://eu-trade.naeu.playblackdesert.com/Trademarket/GetBiddingInfoList"
@@ -50,7 +56,7 @@ def convert_resp(resp):
 
 
 # GET BDO id of an item from the item name
-def get_index(name):
+def get_item_id(name):
     prices = pd.read_csv('BDO Items.csv', sep=';')
     cond = prices.Name.isin([name])
     return prices[cond].Index.values[0]

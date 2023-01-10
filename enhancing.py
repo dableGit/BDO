@@ -1,11 +1,14 @@
 import pandas as pd
-from prices import get_index, get_prices
+from prices import get_item_id, get_prices, get_price
 
-BS = 185000
+BSA = get_price(get_item_id('Black Stone (Armor)'))
+# BSW = get_prices(get_item_id('Black Stone (Weapon)'))
+# MEM = get_prices(get_item_id('Memory Fragment'))
+# CBSA = get_prices(get_item_id('Concentrated Magical Black Stone (Armor)'))
+# CBSW = get_prices(get_item_id('Concentrated Magical Black Stone (Weapon)'))
+
 r_base = 12900
 reset = 100000
-Mem = 2800000
-CBSA = 2100000
 
 # Bheg prices
 PEN = 15000000000
@@ -36,7 +39,7 @@ costs.append(0)
 # Calc FS Cost based on +14 Reblath enhancing
 repair = r_base / 2
 for fs in range(1, 121):
-    stake = BS + costs[-1]
+    stake = BSA + costs[-1]
     c_succ = df['15'][fs-1]
     c_fail = 1 - c_succ
     cost = (stake + c_fail * repair + c_succ * reset)/c_fail
@@ -99,7 +102,7 @@ class Accessory():
 
     def __init__(self, name):
 
-        self.id = get_index(name)
+        self.id = get_item_id(name)
         self.name = name
 
         df = get_prices(self.id)
@@ -108,6 +111,7 @@ class Accessory():
         self.base_chance = [0, 0.25, 0.1, 0.075, 0.025, 0.005]
         self.soft_cap = [0, 18, 40, 44, 110, 330]
 
+    # Get enhancement success chance based on enh. level and failstack
     def get_chance(self, level, fs):
         if fs <= self.soft_cap[level]:
             return self.base_chance[level] + fs * self.base_chance[level] / 10
@@ -115,10 +119,11 @@ class Accessory():
             return self.base_chance[level] + self.soft_cap[level] * self.base_chance[level] / 10 + (
                 fs - self.soft_cap[level]) * self.base_chance[level] / 50
 
+    # Get most profitable FS to enhance a specific level (or 0 if not profitable at all)
     def enhance(self, level):
         best_fs = 0
         best_profit = 0
-        stake = self.prices[0] + self.prices[level-1]
+        stake = self.prices[0] + self.prices[level-1]        
         for fs, cost in enumerate(costs):
             chance = self.get_chance(level, fs)
             profit = self.prices[level] - cost - stake / chance
@@ -160,6 +165,18 @@ items = [
     "Deboreka Belt",
 ]
 
+data = {}
 for item in items:
     acc = Accessory(item)
-    acc.profits()
+    PRI = acc.enhance(1)
+    DUO = acc.enhance(2)
+    TRI = acc.enhance(3)
+    row = [PRI[1], PRI[2], DUO[1], DUO[2], TRI[1], TRI[2]]
+    data[acc.name] = row
+    # acc.profits()
+
+# data = {'acc1': [0, 0, 40, 20, 44, 100], 'acc2': [26, 10, 40, 30, 44, 80]}
+columns = ['PRI_FS', 'PRI_profit', 'DUO_FS', 'DUO_profit', 'TRI_FS', 'TRI_profit']
+df = pd.DataFrame.from_dict(data, orient='index', columns=columns)
+df['total_profit'] = df['PRI_profit'] + df['DUO_profit'] + df['TRI_profit']
+print(df)
