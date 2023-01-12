@@ -20,9 +20,9 @@ def get_prices(idx):
 
 def get_price(idx):
     df = get_prices(idx)
-    base = int(df['Base Price'].values[0])
-    last = int(df['Last sale price'].values[0])
-    return int((base + last) / 2)
+    return int(df['Base Price'].values[0])
+    # last = int(df['Last sale price'].values[0])
+    # return int((base + last) / 2)
 
 
 def get_bidding_info(idx, subkey):
