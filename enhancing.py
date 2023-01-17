@@ -45,29 +45,34 @@ class Accessory():
 
 
 items = [
+    # "Serap's Necklace",
+    "Sicil's Necklace",
     "Laytenn's Power Stone",
     'Ogre Ring',
-    'Tungrad Necklace',
-    'Revived Lunar Necklace',
-    'Deboreka Necklace',
+    # 'Tungrad Necklace',
+    # 'Revived Lunar Necklace',
+    # 'Revived River Necklace',
+    # 'Deboreka Necklace',
 
     'Forest Ronaros Ring',
+    'Ring of Cadry Guardian',
     'Ring of Crescent Guardian',
     'Eye of the Ruins Ring',
-    'Ominous Ring',
-    'Tungrad Ring',
+    # 'Ominous Ring',
+    # 'Tungrad Ring',
 
     'Narc Ear Accessory',
     'Ethereal Earring',
-    'Tungrad Earring',
-    'Black Distortion Earring',
+    # 'Tungrad Earring',
+    # 'Black Distortion Earring',
 
-    "Orkinrad's Belt",
+    "Centaurus Belt",
+    # "Orkinrad's Belt",
     "Basilisk's Belt",
     "Valtarra Eclipsed Belt",
-    "Tungrad Belt",
-    "Turo's Belt",
-    "Deboreka Belt",
+    # "Tungrad Belt",
+    # "Turo's Belt",
+    # "Deboreka Belt",
 ]
 
 data = {}
@@ -81,7 +86,6 @@ for item in items:
     data[acc.name] = row
     # acc.profits()
 
-# data = {'acc1': [0, 0, 40, 20, 44, 100], 'acc2': [26, 10, 40, 30, 44, 80]}
 columns = ['base_price', 'PRI_FS', 'PRI_profit', 'DUO_FS', 'DUO_profit', 'TRI_FS', 'TRI_profit', 'TET_FS', 'TET_profit']
 df = pd.DataFrame.from_dict(data, orient='index', columns=columns)
 df['total_profit'] = df['PRI_profit'] + df['DUO_profit'] + df['TRI_profit']

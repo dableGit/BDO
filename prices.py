@@ -59,6 +59,7 @@ def convert_resp(resp):
 def get_item_id(name):
     prices = pd.read_csv('BDO Items.csv', sep=';')
     cond = prices.Name.isin([name])
+    # print(name)
     return prices[cond].Index.values[0]
 
 
