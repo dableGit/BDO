@@ -83,11 +83,14 @@ def chain():
     costs[109] = costs[103] + raw_fs_costs(CBSA, r_base / 2, costs[54] - costs[40])
     costs[115] = costs[109] + raw_fs_costs(CBSA, r_base / 2, costs[54] - costs[40])
 
-def chain2():    
-    costs[20] = bs_convert(20)
+def chain2():
+    fs = 20
+    costs[fs] = bs_convert(fs)
     # PRI Reblath
-    costs[23] = (costs[20] + CBSA) / (1 - df['DUO'][20])
-    costs[26] = (costs[23] + CBSA) / (1 - df['DUO'][23])
+    gain = 3
+    costs[fs+gain] = (costs[fs] + CBSA) / (1 - df['DUO'][fs])
+    fs = fs+gain
+    costs[fs+gain] = (costs[fs] + CBSA) / (1 - df['DUO'][fs])
     costs[29] = (costs[26] + CBSA) / (1 - df['DUO'][26])
     costs[32] = (costs[29] + CBSA) / (1 - df['DUO'][29])
     # DUO Reblath
@@ -181,8 +184,13 @@ def boss_armor(stake, res_succ, res_fail, succ_chances, fs_gain):
 # for fs, cost in chain().items():
 #     print(fs, int(cost/1000000))
 
-old_method()
-chain2()
+def formula(fs):
+    return int((0.0531 *fs*fs  - 1.4*fs + 9.3627)*1000000)
+
+costs = [formula(fs) for fs in range(1,121)]
+
+# old_method()
+# chain2()
 
 s = pd.Series(costs)
 s.astype('int64').to_csv('test.csv')
