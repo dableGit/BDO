@@ -186,6 +186,8 @@ def boss_armor(stake, res_succ, res_fail, succ_chances, fs_gain):
 
 def formula(fs):
     return int((0.0531 *fs*fs  - 1.4*fs + 9.3627)*1000000)
+    # return int((0.001 * fs*fs*fs - 0.0809 * fs*fs + 1.8713 * fs - 5.6911)*1000000)
+
 
 costs = [formula(fs) for fs in range(1,121)]
 
