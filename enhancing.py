@@ -59,7 +59,10 @@ class Armor():
         best_cost = 100000000000
         for fs, fscost in enumerate(costs):
             chance = self.get_chance(level, fs)
-            cost = (fscost + repair + mats + down) / chance
+            fail = 1 - chance
+            # cost = (fscost + repair + mats + down) / chance
+            cost = (chance*fscost + fail*(repair + down) + mats) / chance
+            # print(fs, int(cost/1000000), chance)
             if cost < best_cost:
                 best_fs = fs
                 best_cost = cost
@@ -161,6 +164,8 @@ BSA = get_price(get_item_id('Black Stone (Armor)'))
 # BSW = get_prices(get_item_id('Black Stone (Weapon)'))
 MEM = get_price(get_item_id('Memory Fragment'))
 CBSA = get_price(get_item_id('Concentrated Magical Black Stone (Armor)'))
+Lemoria = 900000
 armor = Armor("Red Nose's Armor", 5*MEM, BSA, 10*MEM, CBSA)
 for level in range(21):
     print(armor.enhance(level))
+# print(armor.enhance(19))
