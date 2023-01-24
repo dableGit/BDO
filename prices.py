@@ -22,8 +22,9 @@ def convert_resp(resp: str) -> list:
     return new_list
 
 
-def get_prices(idx: str) -> pd.DataFrame:
+def get_prices(name: str) -> pd.DataFrame:
     # Returns full data from endpoint GetWorldMarketSubList as a dataframe
+    idx = get_item_id(name)
     url = "https://eu-trade.naeu.playblackdesert.com/Trademarket/GetWorldMarketSubList"
     myjson = {
         "keyType": 0,
@@ -43,15 +44,13 @@ def get_prices(idx: str) -> pd.DataFrame:
 
 def get_base_price(name: str) -> int:
     # Returns the base price of an unenhanced item
-    idx = get_item_id(name)
-    df = get_prices(idx)
+    df = get_prices(name)
     return int(df['Base Price'].values[0])
 
 
 def get_price_list(name: str) -> list:
     # Returns a list of prices from 0 to PEN enhancement levels
-    idx = get_item_id(name)
-    df = get_prices(idx)
+    df = get_prices(name)
     pricelist = []
     for i in range(6):
         pricelist.append(int(df['Base Price'].values[0]))

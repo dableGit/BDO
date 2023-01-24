@@ -1,5 +1,6 @@
 import pandas as pd
 from prices import get_base_price
+from chances import get_chance
 
 BSA = get_base_price('Black Stone (Armor)')
 # BSW = get_base_price('Black Stone (Weapon)')
@@ -10,8 +11,8 @@ CBSA = get_base_price('Concentrated Magical Black Stone (Armor)')
 r_base = 12900
 reset = 100000
 
-df = pd.read_csv('Armor_FS.csv', sep=';')
-df = df / 100
+# df = pd.read_csv('Armor_FS.csv', sep=';')
+# df = df / 100
 
 costs = []
 costs.append(0)
@@ -66,35 +67,35 @@ def chain():
     costs[115] = costs[109] + raw_fs_costs(CBSA, r_base / 2, costs[54] - costs[40])
 
 
-def chain2():
-    fs = 20
-    costs[fs] = bs_convert(fs)
-    # PRI Reblath
-    gain = 3
-    costs[fs+gain] = (costs[fs] + CBSA) / (1 - df['DUO'][fs])
-    fs = fs+gain
-    costs[fs+gain] = (costs[fs] + CBSA) / (1 - df['DUO'][fs])
-    costs[29] = (costs[26] + CBSA) / (1 - df['DUO'][26])
-    costs[32] = (costs[29] + CBSA) / (1 - df['DUO'][29])
-    # DUO Reblath
-    costs[36] = (costs[32] + CBSA) / (1 - df['TRI'][32])
-    costs[40] = (costs[36] + CBSA) / (1 - df['TRI'][36])
-    costs[44] = (costs[40] + CBSA) / (1 - df['TRI'][40])
-    # TRI Reblath
-    costs[49] = (costs[44] + CBSA) / (1 - df['TET'][44])
-    costs[54] = (costs[49] + CBSA) / (1 - df['TET'][49])
-    costs[59] = (costs[54] + CBSA) / (1 - df['TET'][54])
-    costs[64] = (costs[59] + CBSA) / (1 - df['TET'][59])
-    costs[69] = (costs[64] + CBSA) / (1 - df['TET'][64])
-    costs[74] = (costs[69] + CBSA) / (1 - df['TET'][69])
-    costs[79] = (costs[74] + CBSA) / (1 - df['TET'][74])
-    # TET Reblath
-    costs[85] = (costs[79] + CBSA) / (1 - df['PEN'][79])
-    costs[91] = (costs[85] + CBSA) / (1 - df['PEN'][85])
-    costs[97] = (costs[91] + CBSA) / (1 - df['PEN'][91])
-    costs[103] = (costs[97] + CBSA) / (1 - df['PEN'][97])
-    costs[109] = (costs[103] + CBSA) / (1 - df['PEN'][103])
-    costs[115] = (costs[109] + CBSA) / (1 - df['PEN'][109])
+# def chain2():
+#     fs = 20
+#     costs[fs] = bs_convert(fs)
+#     # PRI Reblath
+#     gain = 3
+#     costs[fs+gain] = (costs[fs] + CBSA) / (1 - df['DUO'][fs])
+#     fs = fs+gain
+#     costs[fs+gain] = (costs[fs] + CBSA) / (1 - df['DUO'][fs])
+#     costs[29] = (costs[26] + CBSA) / (1 - df['DUO'][26])
+#     costs[32] = (costs[29] + CBSA) / (1 - df['DUO'][29])
+#     # DUO Reblath
+#     costs[36] = (costs[32] + CBSA) / (1 - df['TRI'][32])
+#     costs[40] = (costs[36] + CBSA) / (1 - df['TRI'][36])
+#     costs[44] = (costs[40] + CBSA) / (1 - df['TRI'][40])
+#     # TRI Reblath
+#     costs[49] = (costs[44] + CBSA) / (1 - df['TET'][44])
+#     costs[54] = (costs[49] + CBSA) / (1 - df['TET'][49])
+#     costs[59] = (costs[54] + CBSA) / (1 - df['TET'][54])
+#     costs[64] = (costs[59] + CBSA) / (1 - df['TET'][59])
+#     costs[69] = (costs[64] + CBSA) / (1 - df['TET'][64])
+#     costs[74] = (costs[69] + CBSA) / (1 - df['TET'][69])
+#     costs[79] = (costs[74] + CBSA) / (1 - df['TET'][74])
+#     # TET Reblath
+#     costs[85] = (costs[79] + CBSA) / (1 - df['PEN'][79])
+#     costs[91] = (costs[85] + CBSA) / (1 - df['PEN'][85])
+#     costs[97] = (costs[91] + CBSA) / (1 - df['PEN'][91])
+#     costs[103] = (costs[97] + CBSA) / (1 - df['PEN'][97])
+#     costs[109] = (costs[103] + CBSA) / (1 - df['PEN'][103])
+#     costs[115] = (costs[109] + CBSA) / (1 - df['PEN'][109])
 
 
 # Calc FS Cost based on +14 Reblath enhancing
@@ -102,7 +103,8 @@ def old_method(max=31):
     repair = r_base / 2
     for fs in range(1, max):
         stake = BSA + costs[-1]
-        c_succ = df['15'][fs-1]
+        # c_succ = df['15'][fs-1]
+        c_succ = get_chance('Armor WBG', 14, fs)
         c_fail = 1 - c_succ
         cost = (stake + c_fail * repair + c_succ * reset)/c_fail
         costs.append(cost)
@@ -114,7 +116,8 @@ def old_method(max=31):
 def old_method2():
     repair = r_base / 2
     for fs in range(1, 121):
-        c_succ = df['15'][fs-1]
+        # c_succ = df['15'][fs-1]
+        c_succ = get_chance('Armor WBG', 14, fs)
         c_fail = 1 - c_succ
         cost = (BSA + c_fail * repair + c_succ * (costs[-1] + reset))/c_fail
         costs.append(cost)
