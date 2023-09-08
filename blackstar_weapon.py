@@ -1,8 +1,9 @@
 # import pandas as pd
 from prices import get_item_id, get_base_price, get_price_list
-from fs_costs import costs
 from chances import get_chance
+from fs_costs import read_fs_costs
 
+costs = read_fs_costs()
 
 class BS_Weapon():
 
@@ -48,10 +49,11 @@ class BS_Weapon():
                 print(level, 'CRON!')
         best_fs = 0
         best_cost = -1
-        for fs, fscost in enumerate(costs):
+        for fs, fscost in enumerate(costs):            
             chance = get_chance(self.category, level, fs)
             fail = 1 - chance            
-            cost = (chance*fscost + fail*(repair + down) + mats) / chance            
+            cost = (chance*fscost + fail*(repair + down) + mats) / chance
+            print(fs, cost)
             if (cost < best_cost) or (best_cost == -1):
                 best_fs = fs
                 best_cost = cost
@@ -68,13 +70,14 @@ def cron(level):
 
 def bs_fs():
     bs = BS_Weapon("Blackstar Crescent Pendulum")
-    print(bs.name)
-    print(bs.prices)
-    cumulated = 0
-    for level in range(20):
-        fs, cost = bs.enhance(level)
-        cumulated = cumulated + cost
-        print(bs.levels[level+1], fs, cost, cumulated)
-    # print(bs.enhance(19))
+    bs.enhance(18)
+    # print(bs.name)
+    # print(bs.prices)
+    # cumulated = 0
+    # for level in range(20):
+    #     fs, cost = bs.enhance(level)
+    #     cumulated = cumulated + cost
+    #     print(bs.levels[level+1], fs, cost, cumulated)
 
 bs_fs()
+
